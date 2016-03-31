@@ -8,6 +8,13 @@ namespace TDD
 {
     public class StringCalculator
     {
+        private readonly ILogger _mockedLogger;
+        
+        public StringCalculator(ILogger mockedLogger)
+        {
+            _mockedLogger = mockedLogger;
+        }
+
         public int Add(string commaSeparatedNumbers)
         {
             if (commaSeparatedNumbers.Equals(string.Empty))

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Moq;
 using TDD;
 using Xunit;
 
@@ -106,6 +107,20 @@ namespace TDDStringCalculator.Test
             var ex = Assert.Throws<Exception>(() => _stringCalc.Add(inputWithNegativeNumbers));
             Assert.Equal(expectedExceptionMessage, ex.Message);
         }
-        
+
+        [Fact]
+        public void Add_AnyValidStringInput_ResultShouldBeLogged()
+        {
+            // ARRANGE
+            var validStringInput = "1,2";
+            Mock<ILogger> mockedLogger = new Mock<ILogger>();
+            var stringCalc = new StringCalculator(mockedLogger.Object);
+
+            // ACT
+            _stringCalc.Add(validStringInput);
+
+            // ASSERT
+            mockedLogger.Verify(logger => logger.Write(It.IsAny<string>()), Times.Once());
+        }
     }
 }
