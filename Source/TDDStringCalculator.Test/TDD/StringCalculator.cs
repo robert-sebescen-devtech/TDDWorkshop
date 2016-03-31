@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace TDD
 {
-    public class Class1
+    public class StringCalculator
     {
         private readonly ILogger _logger;
         private readonly IWebService _webService;
 
-        public Class1(ILogger logger, IWebService webService)
+        public StringCalculator(ILogger logger, IWebService webService)
         {
             _logger = logger;
             _webService = webService;

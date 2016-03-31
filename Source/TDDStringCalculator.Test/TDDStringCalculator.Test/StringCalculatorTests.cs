@@ -11,7 +11,7 @@ namespace TDDStringCalculator.Test
 {
 	public class StringCalculatorTests
 	{
-		private Class1 _stringCalc;
+		private StringCalculator _stringCalc;
 
 		public StringCalculatorTests()
 		{
@@ -165,9 +165,9 @@ namespace TDDStringCalculator.Test
 			return this;
 		}
 
-		public Class1 Build()
+		public StringCalculator Build()
 		{
-			return new Class1(_logger.Object, _webService.Object);
+			return new StringCalculator(_logger.Object, _webService.Object);
 		}
 
         public StringCalcBuilder With(Mock<IWebService> mockedWebService)
