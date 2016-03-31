@@ -11,7 +11,7 @@ namespace TDDStringCalculator.Test
 {
 	public class StringCalculatorTests
 	{
-		private StringCalculator _stringCalc;
+		private Class1 _stringCalc;
 
 		public StringCalculatorTests()
 		{
@@ -130,25 +130,50 @@ namespace TDDStringCalculator.Test
 			mockedLogger.Verify(logger => logger.Write(It.IsAny<string>()), Times.Once());
 		}
 
+	    [Fact]
+	    public void Add_LoggerThrowsAnException_WebServiceShouldBeCalled()
+	    {
+	        // ARRANGE
+	        var inputThatCausesLoggerException = "1,2,3";
+	        var stubLogger = new Mock<ILogger>();
+	        var mockedWebService = new Mock<IWebService>();
+	        var loggerExceptionMessage = "Logging failed!";
+	        _stringCalc = AStringCalculator().With(stubLogger).With(mockedWebService).Build();
+            stubLogger.Setup(logger => logger.Write(It.IsAny<string>())).Throws(new Exception(loggerExceptionMessage));
+
+            // ACT
+	        _stringCalc.Add(inputThatCausesLoggerException);
+
+            // ASSERT
+	        mockedWebService.Verify(ws => ws.NotifyLoggingFailed(It.Is<string>((val) => String.Equals(val,loggerExceptionMessage))));
+	    }
+
 		private static StringCalcBuilder AStringCalculator()
 		{
 			return new StringCalcBuilder();
 		}
 	}
 
-	internal class StringCalcBuilder
+    internal class StringCalcBuilder
 	{
 		private Mock<ILogger> _logger = new Mock<ILogger>();
-		
-		public StringCalcBuilder With(Mock<ILogger> logger)
+        private Mock<IWebService> _webService = new Mock<IWebService>();
+
+        public StringCalcBuilder With(Mock<ILogger> logger)
 		{
 			_logger = logger;
 			return this;
 		}
 
-		public StringCalculator Build()
+		public Class1 Build()
 		{
-			return new StringCalculator(_logger.Object);
+			return new Class1(_logger.Object, _webService.Object);
 		}
+
+        public StringCalcBuilder With(Mock<IWebService> mockedWebService)
+        {
+            _webService = mockedWebService;
+            return this;
+        }
 	}
 }

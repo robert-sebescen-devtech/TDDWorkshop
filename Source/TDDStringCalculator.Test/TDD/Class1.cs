@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 
 namespace TDD
 {
-    public class StringCalculator
+    public class Class1
     {
-        private readonly ILogger _mockedLogger;
-        
-        public StringCalculator(ILogger mockedLogger)
+        private readonly ILogger _logger;
+        private readonly IWebService _webService;
+
+        public Class1(ILogger logger, IWebService webService)
         {
-            _mockedLogger = mockedLogger;
+            _logger = logger;
+            _webService = webService;
         }
 
         public int Add(string commaSeparatedNumbers)
@@ -36,7 +38,17 @@ namespace TDD
 
             CheckForNegatives(numbers);
 
-            return numbers.Sum();
+            var result = numbers.Sum();
+            try
+            {
+                _logger.Write(result.ToString());
+            }
+            catch (Exception ex)
+            {
+                _webService.NotifyLoggingFailed(ex.Message);
+            }
+
+            return result;
         }
 
         private void CheckForNegatives(int[] numbers)
